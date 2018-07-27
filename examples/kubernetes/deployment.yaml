@@ -17,4 +17,37 @@ spec:
       containers:
       - name: mailcow-dind
         image: quay.io/Promaethius/mailcow-dind
-        
+        restart: Always
+        env:
+          - name: HOSTNAME
+            valueFrom:
+              configMapKeyRef:
+                name: mailcow-dind
+                key: hostname
+          - name: MAILCOW_TZ
+            valueFrom:
+              configMapKeyRef:
+                name: mailcow-dind
+                key: timezone
+          - name: CRON_BACKUP
+            valueFrom:
+              configMapKeyRef:
+                name: mailcow-dind
+                key: cronBackup
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: dind-persistent
+        - mountPath: /mailcow
+          name: mailcow-persistent
+        - mountPath: /mailcow-backup
+          name: mailcow-backup
+      volumes:
+      - name: dind-persistent
+        persistentVolumeClaim:
+          claimName: dind-persistent
+      - name: mailcow-persistent
+        persistentVolumeClaim:
+          claimName: mailcow-persistent
+      - name: mailcow-backup
+        persistentVolumeClaim:
+          claimName: mailcow-backup

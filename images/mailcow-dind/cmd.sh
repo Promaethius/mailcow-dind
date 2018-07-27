@@ -25,7 +25,7 @@ init_check() {
     delay_exit
   fi
   if [ ! -z $MAILCOW_SKIPENCRYPT ]; then
-    echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted."
+    echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"
   fi
 }
 

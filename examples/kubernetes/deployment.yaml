@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailcow-dind
+  labels:
+    app: mailcow-dind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailcow-dind
+  template:
+    metadata:
+      labels:
+        app: mailcow-dind
+    spec:
+      containers:
+      - name: mailcow-dind
+        image: quay.io/Promaethius/mailcow-dind
+        

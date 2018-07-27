@@ -24,6 +24,9 @@ init_check() {
     echo "Add MAILCOW_TZ env var for mailcow."
     delay_exit
   fi
+  if [ ! -z $MAILCOW_SKIPENCRYPT ]; then
+    echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted."
+  fi
 }
 
 priv_check() {
@@ -69,6 +72,9 @@ init_mailcow() {
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
   /bin/sh /mailcow/generate_config.sh
+  if [ -z $MAILCOW_SKIPENCRYPT ]; then
+    sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
+  fi
 }
 
 start_mailcow() {

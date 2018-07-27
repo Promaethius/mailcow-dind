@@ -1,5 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
+metadata:
+  name: mailcow-dind
 data:
   hostname: "example.place.com"
   timezone: "PDT"

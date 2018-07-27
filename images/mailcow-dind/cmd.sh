@@ -45,7 +45,7 @@ cron_check() {
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
-    if [ ! "CRON_BACKUP" =~ "$CRON_REGEX" ]
+    if [ ! "CRON_BACKUP" =~ "$CRON_REGEX" ]; then
       echo "Incorrect Cron expression for CRON_BACKUP."
       delay_exit
     fi
@@ -53,7 +53,7 @@ cron_check() {
   if [ ! -z $CRON_UPDATE ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
-    if [ ! "CRON_UPDATE" =~ "$CRON_REGEX" ]
+    if [ ! "CRON_UPDATE" =~ "$CRON_REGEX" ]; then
       echo "Incorrect Cron expression for CRON_UPDATE."
       delay_exit
     fi

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Adapted from https://stackoverflow.com/questions/14203122/create-a-regular-expression-for-cron-statement#comment62684417_17858524
 CRON_REGEX='/^(\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?(1?[0-9]|2[0-3]))) (\*|((\*\/)?([1-9]|[12][0-9]|3[0-1]))) (\*|((\*\/)?([1-9]|1[0-2]))) (\*|((\*\/)?[0-6]))$/'
@@ -45,7 +45,7 @@ cron_check() {
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
-    if [ ! "CRON_BACKUP" =~ "$CRON_REGEX" ]; then
+    if [[ ! "CRON_BACKUP" =~ "$CRON_REGEX" ]]; then
       echo "Incorrect Cron expression for CRON_BACKUP."
       delay_exit
     fi
@@ -53,7 +53,7 @@ cron_check() {
   if [ ! -z $CRON_UPDATE ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
-    if [ ! "CRON_UPDATE" =~ "$CRON_REGEX" ]; then
+    if [[ ! "CRON_UPDATE" =~ "$CRON_REGEX" ]]; then
       echo "Incorrect Cron expression for CRON_UPDATE."
       delay_exit
     fi

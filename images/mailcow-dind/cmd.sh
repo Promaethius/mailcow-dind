@@ -75,6 +75,8 @@ init_mailcow() {
   if [ -z $MAILCOW_SKIPENCRYPT ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
   fi
+  sed -i 's/SKIP_IP_CHECK=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
+  sed -i 's/SYSCTL_IPV6_DISABLED=0/SYSCTL_IPV6_DISABLED=1/g' /mailcow/mailcow.conf
 }
 
 start_mailcow() {

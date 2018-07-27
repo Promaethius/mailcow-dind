@@ -10,4 +10,4 @@ RUN curl -L https://github.com/docker/compose/releases/download/$COMPOSE/docker-
 
 COPY ./cmd.sh /cmd.sh
 
-CMD /bin/bash /cmd.sh
+CMD /bin/sh /cmd.sh

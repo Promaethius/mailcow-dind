@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Adapted from https://stackoverflow.com/questions/14203122/create-a-regular-expression-for-cron-statement#comment62684417_17858524
 CRON_REGEX='/^(\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?(1?[0-9]|2[0-3]))) (\*|((\*\/)?([1-9]|[12][0-9]|3[0-1]))) (\*|((\*\/)?([1-9]|1[0-2]))) (\*|((\*\/)?[0-6]))$/'

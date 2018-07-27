@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# Adapted from https://stackoverflow.com/questions/14203122/create-a-regular-expression-for-cron-statement#comment62684417_17858524
-CRON_REGEX='/^(\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?[1-5]?[0-9])) (\*|((\*\/)?(1?[0-9]|2[0-3]))) (\*|((\*\/)?([1-9]|[12][0-9]|3[0-1]))) (\*|((\*\/)?([1-9]|1[0-2]))) (\*|((\*\/)?[0-6]))$/'
+CRON_REGEX='/^([0-59]|\*) ([0-23]|\*) ([1-31]|\*) ([1-12]|\*) ([1-7]|\*) ([1900-3000]|\*)$/'
 # Adapted from https://stackoverflow.com/a/106223
-HOSTNAME_REGEX='^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'
+HOSTNAME_REGEX='/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/'
 
 # Makes things so much easier to debug. Logs actually stick around.
 delay_exit() {
@@ -11,15 +10,19 @@ delay_exit() {
   exit 1
 }
 
+regex_check() {
+  if [ ! -z $(echo"$1" | awk "$2") ]; then
+    echo "Incorrect format for $1"
+    delay_exit
+  fi
+}
+
 init_check() {
   if [ ! -z $HOSTNAME ]; then
     echo "Add HOSTNAME env var for mailcow."
     delay_exit
   else
-    if [[ ! "$HOSTNAME" =~ "$HOSTNAME_REGEX" ]]; then
-      echo "Incorrect format for HOSTNAME."
-      delay_exit
-    fi
+    regex_check $HOSTNAME $HOSTNAME_REGEX
   fi
   if [ ! -z $MAILCOW_TZ ]; then
     echo "Add MAILCOW_TZ env var for mailcow."
@@ -45,18 +48,12 @@ cron_check() {
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
-    if [[ ! "CRON_BACKUP" =~ "$CRON_REGEX" ]]; then
-      echo "Incorrect Cron expression for CRON_BACKUP."
-      delay_exit
-    fi
+    regex_check $CRON_BACKUP $CRON_REGEX
   fi
   if [ ! -z $CRON_UPDATE ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
-    if [[ ! "CRON_UPDATE" =~ "$CRON_REGEX" ]]; then
-      echo "Incorrect Cron expression for CRON_UPDATE."
-      delay_exit
-    fi
+    regex_check $CRON_UPDATE $CRON_REGEX
   fi
 }
 

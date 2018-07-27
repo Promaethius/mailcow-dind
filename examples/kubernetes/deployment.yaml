@@ -41,6 +41,9 @@ spec:
           name: mailcow-persistent
         - mountPath: /mailcow-backup
           name: mailcow-backup
+        securityContext:
+          capabilities:
+            privileged: true
       volumes:
       - name: dind-persistent
         persistentVolumeClaim:

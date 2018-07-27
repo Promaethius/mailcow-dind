@@ -32,10 +32,10 @@ init_check() {
 priv_check() {
   ip link add dummy0 type dummy >/dev/null
   if [ $? -eq 0 ]; then
-      ip link delete dummy0 >/dev/null
-      return 0
+    ip link delete dummy0 >/dev/null
   else
-      return 1
+    echo "This container must be privileged."
+    delay_exit
   fi
 }
 
@@ -89,11 +89,7 @@ start_stack() {
   start_mailcow
 }
 
-if [ ! $(priv_check) ]; then
-  echo "This container must be privileged."
-  delay_exit
-fi
-
+priv_check
 init_cron
 
 if [ -z /mailcow/mailcow.conf ]; then

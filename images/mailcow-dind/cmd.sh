@@ -6,7 +6,7 @@ HOSTNAME_REGEX='/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-
 
 # Makes things so much easier to debug. Logs actually stick around.
 delay_exit() {
-  sleep 1m
+  sleep 10s
   exit 1
 }
 

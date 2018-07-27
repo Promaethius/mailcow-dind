@@ -20,6 +20,7 @@ init_check() {
       echo "Incorrect format for HOSTNAME."
       delay_exit
     fi
+  fi
   if [ ! -z $MAILCOW_TZ ]; then
     echo "Add MAILCOW_TZ env var for mailcow."
     delay_exit

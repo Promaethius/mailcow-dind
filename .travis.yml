@@ -8,3 +8,17 @@ script:
 - cd images
 - docker build -t mailcow-dind mailcow-dind
 - docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged mailcow-dind
+
+after_script:
+- docker tag mailcow-dind quay.io/Promaethius/mailcow-dind
+- mkdir -p ~/.docker
+- |
+  cat > ~/.docker/config.json << EOF
+  {
+    "auths": {
+      "quay.io": {
+        "auth": "$TOKEN"
+      }
+    }
+  }
+- docker push quay.io/Promaethius/mailcow-dind

@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mailcow-dind
+spec:
+  selector:
+    app: mailcow-dind
+  ports:
+  - name: HTTP
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: HTTPS
+    protocol: TCP
+    port: 443
+    targetPort: 443
+  - name: SMTP
+    protocol: TCP
+    port: 25
+    targetPort: 25
+  - name: SMTPS
+    protocol: TCP
+    port: 465
+    targetPort: 465
+  - name: SUBMISSION
+    protocol: TCP
+    port: 587
+    targetPort: 587
+  - name: IMAP
+    protocol: TCP
+    port: 143
+    targetPort: 143
+  - name: IMAPS
+    protocol: TCP
+    port: 993
+    targetPort: 993
+  - name: POP
+    protocol: TCP
+    port: 110
+    targetPort: 110
+  - name: POPS
+    protocol: TCP
+    port: 995
+    targetPort: 995
+  - name: SIEVE
+    protocol: TCP
+    port: 4190
+    targetPort: 4190

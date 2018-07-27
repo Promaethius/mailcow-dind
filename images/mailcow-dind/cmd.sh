@@ -28,9 +28,6 @@ init_check() {
     echo "Add MAILCOW_TZ env var for mailcow."
     delay_exit
   fi
-  if [ ! -z $MAILCOW_SKIPENCRYPT ]; then
-    echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"
-  fi
 }
 
 priv_check() {
@@ -54,15 +51,13 @@ cron_check() {
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
     regex_check $CRON_UPDATE $CRON_REGEX
+    echo "CRON_UPDATE is not currently supported. Look for this in future versions."
   fi
 }
 
 init_cron() {
   cron_check
   echo "$CRON_BACKUP root BACKUP_LOCATION=/mailcow-backup /mailcow/helper-scripts/backup_and_restore.sh backup all" | crontab -
-  if [ -z $CRON_UPDATE ]; then
-    echo "CRON_UPDATE is not currently supported. Look for this in future versions."
-  fi
 }  
 
 init_mailcow() {
@@ -72,6 +67,7 @@ init_mailcow() {
   /bin/sh /mailcow/generate_config.sh
   if [ -z $MAILCOW_SKIPENCRYPT ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
+    echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"
   fi
   sed -i 's/SKIP_IP_CHECK=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
   sed -i 's/SYSCTL_IPV6_DISABLED=0/SYSCTL_IPV6_DISABLED=1/g' /mailcow/mailcow.conf

@@ -75,7 +75,7 @@ init_mailcow() {
 
 start_mailcow() {
   cd /mailcow
-  /usr/local/bin/docker-compose up
+  docker-compose up
 }
 
 start_stack() {

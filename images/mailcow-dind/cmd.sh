@@ -24,8 +24,8 @@ init_check() {
   else
     regex_check "$HOSTNAME" "$HOSTNAME_REGEX"
   fi
-  if [ -z $MAILCOW_TZ ]; then
-    echo "Add MAILCOW_TZ env var for mailcow."
+  if [ -z $TIMEZONE ]; then
+    echo "Add TIMEZONE env var for mailcow."
     delay_exit
   fi
 }
@@ -64,7 +64,7 @@ init_mailcow() {
   init_check
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
-  ./generate_config.sh
+  /bin/sh -c "cd /mailcow && export MAILCOW_HOSTNAME="$HOSTNAME" && export MAILCOW_TZ="$TIMEZONE" && ./generate_config.sh"
   if [ -n $MAILCOW_SKIPENCRYPT ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
     echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"

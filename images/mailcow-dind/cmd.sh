@@ -18,13 +18,13 @@ regex_check() {
 }
 
 init_check() {
-  if [ -z $HOSTNAME ]; then
+  if [ -z "$HOSTNAME" ]; then
     echo "Add HOSTNAME env var for mailcow."
     delay_exit
   else
     regex_check "$HOSTNAME" "$HOSTNAME_REGEX"
   fi
-  if [ -z $TIMEZONE ]; then
+  if [ -z "$TIMEZONE" ]; then
     echo "Add TIMEZONE env var for mailcow."
     delay_exit
   fi
@@ -41,13 +41,13 @@ priv_check() {
 }
 
 cron_check() {
-  if [ -z $CRON_BACKUP ]; then
+  if [ -z "$CRON_BACKUP" ]; then
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
     regex_check "$CRON_BACKUP" "$CRON_REGEX"
   fi
-  if [ -z $CRON_UPDATE ]; then
+  if [ -z "$CRON_UPDATE" ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
     regex_check "$CRON_UPDATE" "$CRON_REGEX"
@@ -65,7 +65,7 @@ init_mailcow() {
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
   MAILCOW_HOSTNAME=$HOSTNAME MAILCOW_TZ=$TIMEZONE . /mailcow/generate_config.sh
-  if [ -n $MAILCOW_SKIPENCRYPT ]; then
+  if [ "$MAILCOW_SKIPENCRYPT" == "true" ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
     echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"
   fi

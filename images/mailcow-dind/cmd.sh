@@ -11,7 +11,7 @@ delay_exit() {
 }
 
 regex_check() {
-  if [ -n $(echo"$1" | awk "$2") ]; then
+  if [ -n $(echo "$1" | awk "$2") ]; then
     echo "Incorrect format for $1"
     delay_exit
   fi

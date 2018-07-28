@@ -22,7 +22,7 @@ init_check() {
     echo "Add HOSTNAME env var for mailcow."
     delay_exit
   else
-    regex_check $HOSTNAME $HOSTNAME_REGEX
+    regex_check "$HOSTNAME" "$HOSTNAME_REGEX"
   fi
   if [ -z $MAILCOW_TZ ]; then
     echo "Add MAILCOW_TZ env var for mailcow."
@@ -45,12 +45,12 @@ cron_check() {
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
-    regex_check $CRON_BACKUP $CRON_REGEX
+    regex_check "$CRON_BACKUP" "$CRON_REGEX"
   fi
   if [ -z $CRON_UPDATE ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
-    regex_check $CRON_UPDATE $CRON_REGEX
+    regex_check "$CRON_UPDATE" "$CRON_REGEX"
     echo "CRON_UPDATE is not currently supported. Look for this in future versions."
   fi
 }

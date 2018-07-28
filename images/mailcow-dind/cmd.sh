@@ -11,20 +11,20 @@ delay_exit() {
 }
 
 regex_check() {
-  if [ -n $(echo "$1" | awk "$2") ]; then
+  if [ -z $(echo "$1" | awk "$2") ]; then
     echo "Incorrect format for $1"
     delay_exit
   fi
 }
 
 init_check() {
-  if [ -n $HOSTNAME ]; then
+  if [ -z $HOSTNAME ]; then
     echo "Add HOSTNAME env var for mailcow."
     delay_exit
   else
     regex_check $HOSTNAME $HOSTNAME_REGEX
   fi
-  if [ -n $MAILCOW_TZ ]; then
+  if [ -z $MAILCOW_TZ ]; then
     echo "Add MAILCOW_TZ env var for mailcow."
     delay_exit
   fi
@@ -41,13 +41,13 @@ priv_check() {
 }
 
 cron_check() {
-  if [ -n $CRON_BACKUP ]; then
+  if [ -z $CRON_BACKUP ]; then
     echo "CRON_BACKUP must be set in cron format for consistent backups."
     delay_exit
   else
     regex_check $CRON_BACKUP $CRON_REGEX
   fi
-  if [ -n $CRON_UPDATE ]; then
+  if [ -z $CRON_UPDATE ]; then
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
     regex_check $CRON_UPDATE $CRON_REGEX

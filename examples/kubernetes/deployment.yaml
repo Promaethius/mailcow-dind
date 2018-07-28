@@ -24,7 +24,7 @@ spec:
               configMapKeyRef:
                 name: mailcow-dind
                 key: hostname
-          - name: MAILCOW_TZ
+          - name: TIMEZONE
             valueFrom:
               configMapKeyRef:
                 name: mailcow-dind

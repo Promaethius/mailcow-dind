@@ -62,11 +62,9 @@ init_cron() {
 
 init_mailcow() {
   init_check
-  export MAILCOW_HOSTNAME=$HOSTNAME
-  export MAILCOW_TZ=$TIMEZONE
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
-  . /mailcow/generate_config.sh
+  MAILCOW_HOSTNAME=$HOSTNAME MAILCOW_TZ=$TIMEZONE . /mailcow/generate_config.sh
   if [ -n $MAILCOW_SKIPENCRYPT ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
     echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"

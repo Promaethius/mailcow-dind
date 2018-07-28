@@ -80,6 +80,7 @@ start_mailcow() {
 
 start_stack() {
   crond &
+  dockerd &
   start_mailcow
 }
 

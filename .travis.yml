@@ -10,7 +10,7 @@ script:
 - docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged mailcow-dind
 
 after_script:
-- docker tag mailcow-dind quay.io/Promaethius/mailcow-dind
+- docker tag mailcow-dind quay.io/promaethius/mailcow-dind
 - mkdir -p ~/.docker
 - |
   cat > ~/.docker/config.json << EOF
@@ -21,4 +21,4 @@ after_script:
       }
     }
   }
-- docker push quay.io/Promaethius/mailcow-dind
+- docker push quay.io/promaethius/mailcow-dind

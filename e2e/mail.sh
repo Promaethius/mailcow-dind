@@ -3,49 +3,83 @@
 set -ex
 
 telnet() {
-
+  return $(telnet localhost "$1" << EOF \
+"$2" \
+EOF)
 }
 
-response() {
+difference() {
+  return $(sdiff -B -b -s <("$1") <("$2") | wc)
+}
 
+cert() {
+  CERT_REMOTE=$(openssl s_client -showcerts -servername example.org -connect localhost:$1 2>/dev/null | openssl x509 -inform pem -noout -text)
+  CERT_LOCAL=$(openssl x509 -inform pem -noout -text -in /home/travis/mailcow/data/assets/ssl/cert.pem)
+  return $(difference "$CERT_REMOTE" "$CERT_LOCAL")
+}
+
+port() {
+  echo "Testing port $1."
+  return $(nc -zv 127.0.0.1 "$1")
+}
+
+response(){
+  if [ -n $(echo $1 | grep "https") ]; then
+    echo "Testing status code of https://127.0.0.1${2}"
+    return $(curl -s -k -o /dev/null -w "%{http_code}" "https://127.0.0.1${2}")
+  else
+    echo "Testing status code of http://127.0.0.1${2}"
+    return $(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1${2}")
+  fi
+}
+
+body() {
+  return $(difference "$(curl -sbk $1)" "$(curl -sb $2)")
+}
+
+app_test() {
+  #Test SOGo
+  #Test reponse body
 }
 
 imap_test() {
-  #Test port response
+  if [ -z $(port "143 993") ]; then return 0; fi
+  if [ $(cert "993") > 0 ]; then return 0; fi
   #Test TELNET response
 }
 
 smtp_test() {
-  #Test port response
+  if [ -z $(port "25 465") ]; then return 0; fi
+  if [ $(cert "465") > 0 ]; then return 0; fi
   #Test TELNET response
 }
 
 pop_test() {
-  #Test port response
+  if [ -z $(port "110  995") ]; then return 0; fi
+  if [ $(cert "995") > 0 ]; then return 0; fi
   #Test TELNET response
 }
 
 https_test() {
-  #Test port
-  #Test index to init database
-  #Test cert with openssl
-  #Test logging in
-  #Test SOGo response
+  if [ -z $(port "443") ]; then return 0; fi
+  if [ $(cert "443") > 0 ]; then return 0; fi
 }
 
 http_test() {
-  #Only test redirect status
+  if [ -z $(port "80") ]; then return 0; fi
+  if [ $(response) != "301" ]; then return 0; fi
 }
 
 until docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged --net=host -d mailcow-dind
 do
-  #If all these tests return true
-  http_test
-  https_test
-  pop_test
-  smtp_test
-  imap_test
-  #Kill the mailcow-dind container
+  PROGRESS=0
+  if [ -z $(http_test) ]; let "PROGRESS++"; fi
+  if [ -z $(https_test) ]; let "PROGRESS++"; fi
+  if [ -z $(pop_test) ]; let "PROGRESS++"; fi
+  if [ -z $(smtp_test) ]; let "PROGRESS++"; fi
+  if [ -z $(imap_test) ]; let "PROGRESS++"; fi
+  if [ -z $(app_test) ]; let "PROGRESS++"; fi
+  if [ $PROGRESS == 6 ]; then docker stop mailcow-dind && exit 0; fi
 done
 
-#Go on your merry way and push the image.
+exit 1

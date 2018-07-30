@@ -7,7 +7,10 @@ before_install:
 script:
 - cd images
 - docker build -t mailcow-dind mailcow-dind
-- sleep 5m | docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged mailcow-dind
+- docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged -d mailcow-dind
+- docker logs mailcow-dind -f &
+- sleep 4m
+- docker stop mailcow-dind
 
 after_script:
 - docker tag mailcow-dind quay.io/promaethius/mailcow-dind

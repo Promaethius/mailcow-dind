@@ -24,4 +24,5 @@ after_script:
       }
     }
   }
+  EOF
 - docker push quay.io/promaethius/mailcow-dind

@@ -57,4 +57,5 @@ spec:
         persistentVolumeClaim:
           claimName: mailcow-backup
       - name: lib-modules
-        hostPath: /lib/modules
+        hostPath: 
+          path: /lib/modules

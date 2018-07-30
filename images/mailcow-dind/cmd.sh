@@ -71,6 +71,9 @@ init_mailcow() {
   fi
   sed -i 's/SKIP_IP_CHECK=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
   sed -i 's/SYSCTL_IPV6_DISABLED=0/SYSCTL_IPV6_DISABLED=1/g' /mailcow/mailcow.conf
+  yq d -i /mailcow/docker-compose.yaml services.*.sysctls
+  yq d -i /mailcow/docker-compose.yaml services.ipv6nat
+  yq d -i /mailcow/docker-compose.yaml networks.mailcow-network.enable_ipv6
 }
 
 start_mailcow() {

@@ -13,7 +13,7 @@ script:
 - docker stop mailcow-dind
 
 after_script:
-- docker tag mailcow-dind quay.io/promaethius/mailcow-dind
+- docker tag mailcow-dind quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH
 - mkdir -p ~/.docker
 - |
   cat > ~/.docker/config.json << EOF
@@ -25,4 +25,4 @@ after_script:
     }
   }
   EOF
-- docker push quay.io/promaethius/mailcow-dind
+- docker push quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH

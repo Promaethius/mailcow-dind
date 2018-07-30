@@ -38,6 +38,10 @@ priv_check() {
     echo "This container must be privileged."
     delay_exit
   fi
+  if [ ! -d /lib/modules ]; then
+    echo "This container requires a current /lib/modules to be mounted from the host i.e. -v /lib/modules:/lib/modules:ro"
+    delay_exit
+  fi
 }
 
 cron_check() {

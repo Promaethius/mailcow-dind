@@ -12,11 +12,11 @@ Implementation of a DinD container that can host mailcow-dockerized in a situati
 * Apart from the backups, the filesystems are not directly accessible. All docker-compose volumes are stored in /var/lib/docker
 * Because volumes are stored this way internally, it is possible for this image to consume a fair deal of network traffic assuming an NFS of some sort mounted on /var/lib/docker.
 
-## Installation
+## Quick Start
 
 ```
 docker pull quay.io/promaethius/mailcow-dind:latest
-docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * 0 0 *' -e TIMEZONE='PDT' -v /docker/persist:/var/lib/docker -v /mailcow/persist:/mailcow -v /mailcow/backup/persist:/mailcow-backup --name mailcow-dind --privileged --net=host -d mailcow-dind
+docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * 0 0 *' -e TIMEZONE='PDT' -v /docker/persist:/var/lib/docker -v /mailcow/persist:/mailcow -v /mailcow/backup/persist:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged --net=host -d mailcow-dind
 
 #Follow the logs and installation with this command:
 docker logs mailcow-dind -f

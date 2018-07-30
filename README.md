@@ -4,6 +4,7 @@ Implementation of a DinD container that can host mailcow-dockerized in a situati
 ## Roadmap
 * Install a process monitor to keep track of dockerd, crond, and docker-compose up
 * Use aforementioned process monitor to allow https://github.com/mailcow/mailcow-dockerized/blob/master/update.sh to gracefully perform an update.
+* Make IPV6 optional. Requires a host mount of /lib/modules and isn't as self-contained.
 
 ## Caveats
 * No support for IPV6

@@ -41,6 +41,8 @@ spec:
           name: mailcow-persistent
         - mountPath: /mailcow-backup
           name: mailcow-backup
+        - mountPath: /lib/modules
+          name: lib-modules
         securityContext:
           capabilities:
             privileged: true
@@ -54,3 +56,5 @@ spec:
       - name: mailcow-backup
         persistentVolumeClaim:
           claimName: mailcow-backup
+      - name: lib-modules
+        hostPath: /lib/modules

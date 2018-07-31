@@ -13,12 +13,12 @@ until docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZ
 do
   PROGRESS=0
   block "Starting Tests"
-  if [ -z $(http_test) ]; let "PROGRESS++"; fi
-  if [ -z $(https_test) ]; let "PROGRESS++"; fi
-  if [ -z $(pop_test) ]; let "PROGRESS++"; fi
-  if [ -z $(smtp_test) ]; let "PROGRESS++"; fi
-  if [ -z $(imap_test) ]; let "PROGRESS++"; fi
-  if [ -z $(app_test) ]; let "PROGRESS++"; fi
+  if [ -z $(http_test) ]; then let "PROGRESS++"; fi
+  if [ -z $(https_test) ]; then let "PROGRESS++"; fi
+  if [ -z $(pop_test) ]; then let "PROGRESS++"; fi
+  if [ -z $(smtp_test) ]; then let "PROGRESS++"; fi
+  if [ -z $(imap_test) ]; then let "PROGRESS++"; fi
+  if [ -z $(app_test) ]; then let "PROGRESS++"; fi
   if [ $PROGRESS == 6 ]; then docker stop mailcow-dind && block "Testing Complete" && exit 0; fi
   error "Testing Failed. Re-attempting in 30 seconds."
   sleep 30s

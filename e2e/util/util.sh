@@ -1,9 +1,5 @@
 #!/bin/bash
 
-telnet() {
-  return $(telnet localhost "$1")
-}
-
 difference() {
   return $(sdiff -B -b -s <("$1") <("$2") | wc)
 }

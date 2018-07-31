@@ -5,7 +5,7 @@ CRON_REGEX='/^([0-59]|\*) ([0-23]|\*) ([1-31]|\*) ([1-12]|\*) ([1-7]|\*) ([1900-
 HOSTNAME_REGEX='/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/'
 # Adapted from https://stackoverflow.com/a/14880044
 IPS_REGEX='/((25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)(,\n|,?$))/'
-KEY_REGEX='/[a-zA-Z0-9]/'
+KEY_REGEX='/^[a-zA-Z0-9]*/'
 
 # Makes things so much easier to debug. Logs actually stick around.
 delay_exit() {

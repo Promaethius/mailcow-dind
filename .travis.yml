@@ -12,8 +12,6 @@ script:
 - docker logs mailcow-dind -f &
 - sleep 4m
 - docker stop mailcow-dind
-- cd ~/mailcow-dind
-- bash ~/mailcow-dind/e2e/main.sh
 
 after_script:
 - docker tag mailcow-dind quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH

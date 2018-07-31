@@ -95,9 +95,9 @@ init_mailcow() {
   init_api
   if [ "$MAILCOW_SKIPENCRYPT" == "true" ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
+    yq d -i /mailcow/docker-compose.yml services.acme-mailcow
     echo "Removing ACME. This will create STARTTLS problems if you don't have your own certificates mounted at /mailcow/data/assets/ssl in the forms cert.pem and key.pem"
   fi
-  sed -i 's/SKIP_IP_CHECK=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
   sed -i 's/SYSCTL_IPV6_DISABLED=0/SYSCTL_IPV6_DISABLED=1/g' /mailcow/mailcow.conf
   yq d -i /mailcow/docker-compose.yml services.*.sysctls
   yq d -i /mailcow/docker-compose.yml services.ipv6nat

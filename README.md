@@ -24,5 +24,10 @@ docker logs mailcow-dind -f
 
 When everything looks like it setup correctly, refer to official mailcow documentation: https://mailcow.github.io/mailcow-dockerized-docs/
 
+## API
+
+It is possible to start this image with a declared API key and a comma separated list of IPs can access the API.
+Use the environment variables API_KEY and API_IPS.
+
 ## Disclaimer
 In no way is this repository or its author affiliated with mailcow or its constituents. Neither is the author responsible for any loss or mutilation of data in the usage of this software.

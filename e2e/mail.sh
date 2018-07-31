@@ -3,9 +3,7 @@
 set -ex
 
 telnet() {
-  return $(telnet localhost "$1" << EOF \
-"$2" \
-EOF)
+  return $(telnet localhost "$1")
 }
 
 difference() {
@@ -38,36 +36,38 @@ body() {
 }
 
 app_test() {
-  #Test SOGo
   #Test reponse body
+  #Init database by making a request to index.php
+  #Use API to create two domains and one user for each.
+  #Have those two users mail each other through telnet.
 }
 
 imap_test() {
-  if [ -z $(port "143 993") ]; then return 0; fi
-  if [ $(cert "993") > 0 ]; then return 0; fi
+  if [ -z $(port "143 993") ]; then return 1; fi
+  if [ $(cert "993") > 0 ]; then return 1; fi
   #Test TELNET response
 }
 
 smtp_test() {
-  if [ -z $(port "25 465") ]; then return 0; fi
-  if [ $(cert "465") > 0 ]; then return 0; fi
+  if [ -z $(port "25 465") ]; then return 1; fi
+  if [ $(cert "465") > 0 ]; then return 1; fi
   #Test TELNET response
 }
 
 pop_test() {
-  if [ -z $(port "110  995") ]; then return 0; fi
-  if [ $(cert "995") > 0 ]; then return 0; fi
+  if [ -z $(port "110  995") ]; then return 1; fi
+  if [ $(cert "995") > 0 ]; then return 1; fi
   #Test TELNET response
 }
 
 https_test() {
-  if [ -z $(port "443") ]; then return 0; fi
-  if [ $(cert "443") > 0 ]; then return 0; fi
+  if [ -z $(port "443") ]; then return 1; fi
+  if [ $(cert "443") > 0 ]; then return 1; fi
 }
 
 http_test() {
-  if [ -z $(port "80") ]; then return 0; fi
-  if [ $(response) != "301" ]; then return 0; fi
+  if [ -z $(port "80") ]; then return 1; fi
+  if [ $(response) != "301" ]; then return 1; fi
 }
 
 until docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup --name mailcow-dind --privileged --net=host -d mailcow-dind
@@ -80,6 +80,7 @@ do
   if [ -z $(imap_test) ]; let "PROGRESS++"; fi
   if [ -z $(app_test) ]; let "PROGRESS++"; fi
   if [ $PROGRESS == 6 ]; then docker stop mailcow-dind && exit 0; fi
+  sleep 30s
 done
 
 exit 1

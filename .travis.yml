@@ -5,10 +5,9 @@ before_install:
 - docker pull docker:dind
 
 script:
-- cd ~/mailcow-dind/images
+- cd ~/Promaethius/mailcow-dind/images
 - docker build -t mailcow-dind mailcow-dind
-- cd ~/mailcow-dind
-- bash ~/mailcow-dind/e2e/main.sh
+- bash ~/Promaethius/mailcow-dind/e2e/main.sh
 
 after_script:
 - docker tag mailcow-dind quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH

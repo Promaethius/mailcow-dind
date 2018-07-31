@@ -9,7 +9,7 @@ export DIR=$HOME
 . $SH_DIR/util/*.sh
 . $SH_DIR/test/*.sh
 
-until docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v $DIR/dind:/var/lib/docker -v $DIR/mailcow:/mailcow -v $DIR/mailcow-backup:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged --net=host -d mailcow-dind
+until docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='PDT' -v $DIR/dind:/var/lib/docker -v $DIR/mailcow:/mailcow -v $DIR/mailcow-backup:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged --net=host mailcow-dind
 do
   PROGRESS=0
   block "Starting Tests"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 #Adapted from https://stackoverflow.com/a/246128
 export SH_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"

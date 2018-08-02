@@ -23,7 +23,7 @@ api() {
     . $DIR/mailcow/mailcow.conf
   else
     error "$DIR/mailcow/mailcow.conf not found."
-    echo 0
+    return 1
   fi
   
   #Action Domain
@@ -33,6 +33,7 @@ api() {
     ;;
   *)
     error "Unsupported API Action"
+    return 1
     ;;
   esac
   
@@ -46,8 +47,15 @@ api() {
     ;;
   *)
     error "Unsupported API Object"
+    return 1
     ;;
   esac
   
-  curl -X POST -k https://127.0.0.1/api/v1/$ACTION/$OBJECT -d attr="$DATA" -H "X-API-Key: $API_KEY" -H "Host: $MAILCOW_HOSTNAME"
+  #Data Domain
+  if [ -z $3 ]; then 
+    error "DATA field empty"
+    return 1
+  fi
+  
+  echo $(curl -X POST -k https://127.0.0.1/api/v1/$ACTION/$OBJECT -d attr="$DATA" -H "X-API-Key: $API_KEY" -H "Host: $MAILCOW_HOSTNAME")
 }

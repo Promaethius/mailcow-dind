@@ -26,6 +26,7 @@ When everything looks like it setup correctly, refer to official mailcow documen
 
 ## API
 
+**BREAKING FEATURE: Please see https://github.com/mailcow/mailcow-dockerized/issues/1457**
 It is possible to start this image with a declared API key and a comma separated list of IPs can access the API.
 Use the environment variables API_KEY and API_IPS.
 

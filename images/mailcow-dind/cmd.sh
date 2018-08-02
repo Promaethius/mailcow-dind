@@ -34,12 +34,12 @@ init_check() {
 }
 
 api_check() {
-  if [ -n $API_IPS ]; then
-    regex_check "$API_IPS" "$IPS_REGEX"
-    regex_check "$API_KEY" "$KEY_REGEX"
-  else
+  if [ -z "$API_IPS" ]; then
     echo "A comma separated list of IPs must be declared as API clients in API_IPS"
     delay_exit
+  else
+    regex_check "$API_IPS" "$IPS_REGEX"
+    regex_check "$API_KEY" "$KEY_REGEX"
   fi
 }
 
@@ -78,12 +78,12 @@ init_cron() {
 }
 
 init_api() {
-  if [ -n $API_KEY ]; then
+  if [ -z "$API_KEY" ]; then
+    echo "API is disabled."
+  else
     api_check
     sed -i '/API_KEY=/c\API_KEY='"$API_KEY" /mailcow/mailcow.conf
     sed -i '/API_ALLOW_FROM=/c\API_ALLOW_FROM='"$API_IPS" /mailcow/mailcow.conf
-  else
-    echo "API is disabled."
   fi
 }
 

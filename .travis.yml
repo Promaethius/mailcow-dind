@@ -10,7 +10,6 @@ script:
 - docker run -e HOSTNAME='mailplace.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='UTC' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged -d mailcow-dind
 - docker logs mailcow-dind -f &
 - sleep 4m
-- curl -k -H "Host: mailplace.com" --verbose https://127.0.0.1
 - docker stop mailcow-dind
 
 after_script:

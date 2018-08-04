@@ -78,9 +78,9 @@ exec_wrapper() {
 }
 
 wait_docker() {
-  source /mailcow/mailcow.conf
-  echo "Waiting for $COMPOSE_PROJECT_NAME_$1 to be healthy."
-  until [ "`docker inspect -f {{.State.Running}} $COMPOSE_PROJECT_NAME_$1_1`"=="true" ]; do
+  . /mailcow/mailcow.conf
+  echo "Waiting for ${COMPOSE_PROJECT_NAME}_${1} to be healthy."
+  until [ "`docker inspect -f {{.State.Running}} ${COMPOSE_PROJECT_NAME}_${1}_1`"=="true" ]; do
     sleep 10s
   done
 }
@@ -88,7 +88,7 @@ wait_docker() {
 init_db() {
   echo "Beginning DB Init."
   cd /mailcow
-  docker-compose up mysql-mailcow redis-mailcow php-fpm-mailcow -d
+  docker-compose up -d mysql-mailcow redis-mailcow php-fpm-mailcow
   wait_docker "mysql-mailcow"
   wait_docker "redis-mailcow"
   wait_docker "php-fpm-mailcow"

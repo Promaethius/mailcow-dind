@@ -93,7 +93,7 @@ init_db() {
   wait_docker "redis-mailcow"
   wait_docker "php-fpm-mailcow"
   # Adapted from https://github.com/mailcow/mailcow-dockerized/blob/master/data/web/inc/prerequisites.inc.php
-  read -r -d '' CMD << 'EOM'
+  local CMD=$(cat << 'EOM'
 require '/web/inc/vars.inc.php'; 
 require_once '/web/inc/init_db.inc.php';
 $now = new DateTime(); 
@@ -116,7 +116,7 @@ $pdo = new PDO($dsn, $database_user, $database_pass, $opt);
 echo 'An error occured while connecting to the database:',  $e->getMessage(), "\n";
 }
 init_db_schema();
-EOM
+EOM)
   exec_wrapper "$CMD"
   echo "Stopping DB Init"
   docker-compose down

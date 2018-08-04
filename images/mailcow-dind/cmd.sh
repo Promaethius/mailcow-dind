@@ -73,12 +73,24 @@ cron_check() {
 }
 
 exec_wrapper() {
+  echo "Running script in php container: $1"
   docker-compose exec -T php-fpm-mailcow php -r "$1"
 }
 
+wait_docker() {
+  echo "Waiting for $1 to be healthy."
+  until [ "`docker inspect -f {{.State.Running}} $1`"=="true" ]; do
+    sleep 10s
+  done
+}
+
 init_db() {
+  echo "Beginning DB Init."
   cd /mailcow
   docker-compose up mysql-mailcow redis-mailcow php-fpm-mailcow -d
+  wait_docker "mysql-mailcow"
+  wait_docker "redis-mailcow"
+  wait_docker "php-fpm-mailcow"
   # Adapted from https://github.com/mailcow/mailcow-dockerized/blob/master/data/web/inc/prerequisites.inc.php
   read -r -d '' CMD << 'EOM'
 require '/web/inc/vars.inc.php'; 
@@ -105,6 +117,7 @@ echo 'An error occured while connecting to the database:',  $e->getMessage(), "\
 init_db_schema();
 EOM
   exec_wrapper "$CMD"
+  echo "Stopping DB Init"
   docker-compose down
 }
 
@@ -127,6 +140,7 @@ init_mailcow() {
   init_check
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
+  docker-compose pull
   MAILCOW_HOSTNAME=$HOSTNAME MAILCOW_TZ=$TIMEZONE . /mailcow/generate_config.sh
   if [ "$MAILCOW_SKIPENCRYPT" == "true" ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
@@ -143,7 +157,6 @@ init_mailcow() {
 
 start_mailcow() {
   cd /mailcow
-  docker-compose pull
   docker-compose up
 }
 

@@ -92,7 +92,6 @@ init_mailcow() {
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
   cd /mailcow
   MAILCOW_HOSTNAME=$HOSTNAME MAILCOW_TZ=$TIMEZONE . /mailcow/generate_config.sh
-  init_api
   if [ "$MAILCOW_SKIPENCRYPT" == "true" ]; then
     sed -i 's/SKIP_LETS_ENCRYPT=n/SKIP_LETS_ENCRYPT=y/g' /mailcow/mailcow.conf
     yq d -i /mailcow/docker-compose.yml services.acme-mailcow
@@ -102,6 +101,7 @@ init_mailcow() {
   yq d -i /mailcow/docker-compose.yml services.*.sysctls
   yq d -i /mailcow/docker-compose.yml services.ipv6nat
   yq d -i /mailcow/docker-compose.yml networks.mailcow-network.enable_ipv6
+  init_api
 }
 
 start_mailcow() {

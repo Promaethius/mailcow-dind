@@ -72,6 +72,42 @@ cron_check() {
   fi
 }
 
+exec_wrapper() {
+  docker-compose exec -T php-fpm-mailcow php -r "$1"
+}
+
+init_db() {
+  cd /mailcow
+  docker-compose up mysql-mailcow redis-mailcow php-fpm-mailcow -d
+  # Adapted from https://github.com/mailcow/mailcow-dockerized/blob/master/data/web/inc/prerequisites.inc.php
+  read -r -d '' CMD <<- EOM
+    require '/web/inc/vars.inc.php'; 
+    require_once '/web/inc/init_db.inc.php';
+    $now = new DateTime(); 
+    $mins = $now->getOffset() / 60; 
+    $sgn = ($mins < 0 ? -1 : 1); 
+    $mins = abs($mins); 
+    $hrs = floor($mins / 60); 
+    $mins -= $hrs * 60; 
+    $offset = sprintf('%+d:%02d', $hrs*$sgn, $mins); 
+    $dsn = $database_type . ":host=" . $database_host . ";dbname=" . $database_name; 
+    $opt = [ 
+      PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, 
+      PDO::ATTR_EMULATE_PREPARES   => false, 
+      PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . $offset . "', group_concat_max_len = 3423543543;", 
+    ]; 
+    try {
+      $pdo = new PDO($dsn, $database_user, $database_pass, $opt);
+    } catch (PDOException $e) {
+      echo 'An error occured while connecting to the database:',  $e->getMessage(), "\n";
+    }
+    init_db_schema();
+  EOM
+  exec_wrapper "$CMD"
+  docker-compose down
+}
+
 init_cron() {
   cron_check
   echo "$CRON_BACKUP root BACKUP_LOCATION=/mailcow-backup /mailcow/helper-scripts/backup_and_restore.sh backup all" | crontab -
@@ -101,6 +137,7 @@ init_mailcow() {
   yq d -i /mailcow/docker-compose.yml services.*.sysctls
   yq d -i /mailcow/docker-compose.yml services.ipv6nat
   yq d -i /mailcow/docker-compose.yml networks.mailcow-network.enable_ipv6
+  init_db
   init_api
 }
 

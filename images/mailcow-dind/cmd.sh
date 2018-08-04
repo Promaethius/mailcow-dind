@@ -104,6 +104,7 @@ $hrs = floor($mins / 60);
 $mins -= $hrs * 60; 
 $offset = sprintf('%+d:%02d', $hrs*$sgn, $mins); 
 $dsn = $database_type . ":host=" . $database_host . ";dbname=" . $database_name; 
+echo $dsn;
 $opt = [ 
 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, 
@@ -113,7 +114,7 @@ PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . $offset . "', group_concat
 try {
 $pdo = new PDO($dsn, $database_user, $database_pass, $opt);
 } catch (PDOException $e) {
-echo 'An error occured while connecting to the database:',  $e->getMessage(), "\n";
+echo 'An error occured while connecting to the database: ',  $e->getMessage(), "\n";
 }
 init_db_schema();
 EOF

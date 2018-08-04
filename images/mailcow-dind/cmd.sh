@@ -78,8 +78,9 @@ exec_wrapper() {
 }
 
 wait_docker() {
-  echo "Waiting for $1 to be healthy."
-  until [ "`docker inspect -f {{.State.Running}} $1`"=="true" ]; do
+  source /mailcow/mailcow.conf
+  echo "Waiting for $COMPOSE_PROJECT_NAME_$1 to be healthy."
+  until [ "`docker inspect -f {{.State.Running}} $COMPOSE_PROJECT_NAME_$1_1`"=="true" ]; do
     sleep 10s
   done
 }
@@ -162,12 +163,13 @@ start_mailcow() {
 
 start_stack() {
   crond &
-  dockerd &
   start_mailcow
 }
 
 priv_check
 init_cron
+
+dockerd &
 
 if [ -f /mailcow/mailcow.conf ]; then
   echo "Mailcow configuration exists probably from another installation. Attempting startup."

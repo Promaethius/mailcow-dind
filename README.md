@@ -26,9 +26,8 @@ When everything looks like it setup correctly, refer to official mailcow documen
 
 ## API
 
-**BREAKING FEATURE: Please see https://github.com/mailcow/mailcow-dockerized/issues/1457**
 It is possible to start this image with a declared API key and a comma separated list of IPs can access the API.
-Use the environment variables API_KEY and API_IPS.
+Use the environment variables API_KEY and API_IPS. While stock Mailcow crash-loops when initialized with API keys, this system initializes the database with some clever PHP magic and then injects the API keys which circumvents the issue.
 
 ## Disclaimer
 In no way is this repository or its author affiliated with mailcow or its constituents. Neither is the author responsible for any loss or mutilation of data in the usage of this software.

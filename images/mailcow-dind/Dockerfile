@@ -11,4 +11,4 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/2.1.1/yq_linux_amd
 COPY ./cmd.sh /cmd.sh
 COPY ./supervisor.conf /supervisor.conf
 
-CMD supervisor -n -c /supervisor.conf
+CMD /usr/bin/supervisord -n -c /supervisor.conf

@@ -9,5 +9,6 @@ RUN mkdir -p /var/log/cron && mkdir -m 0644 -p /var/spool/cron/crontabs && touch
 RUN curl -L https://github.com/mikefarah/yq/releases/download/2.1.1/yq_linux_amd64 -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq
 
 COPY ./cmd.sh /cmd.sh
+COPY ./supervisor.conf /supervisor.conf
 
-CMD /bin/sh /cmd.sh
+CMD supervisor -n -c /supervisor.conf

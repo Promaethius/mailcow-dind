@@ -3,8 +3,6 @@
 Implementation of a DinD container that can host mailcow-dockerized in a situation where splitting the services is counter intuitive e.g. kubernetes.
 
 ## Roadmap
-* Install a process monitor to keep track of dockerd, crond, and docker-compose up
-* Use aforementioned process monitor to allow https://github.com/mailcow/mailcow-dockerized/blob/master/update.sh to gracefully perform an update.
 * Make IPV6 optional. Requires a host mount of /lib/modules and isn't as self-contained.
 
 ## Caveats
@@ -16,7 +14,7 @@ Implementation of a DinD container that can host mailcow-dockerized in a situati
 
 ```
 docker pull quay.io/promaethius/mailcow-dind:latest
-docker run -e HOSTNAME='example.com' -e CRON_BACKUP='* * * 0 0 *' -e TIMEZONE='PDT' -v /docker/persist:/var/lib/docker -v /mailcow/persist:/mailcow -v /mailcow/backup/persist:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged --net=host -d mailcow-dind
+docker run -e HOSTNAME='mailplace.com' -e CRON_BACKUP='* * * 0 0 *' -e CRON_UPDATE='0 0 * * 0 *' -e TIMEZONE='PDT' -v /docker/persist:/var/lib/docker -v /mailcow/persist:/mailcow -v /mailcow/backup/persist:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged --net=host -d mailcow-dind
 
 #Follow the logs and installation with this command:
 docker logs mailcow-dind -f

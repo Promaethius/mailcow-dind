@@ -68,7 +68,6 @@ cron_check() {
     echo "CRON_UPDATE is not set. This requires manual updates."
   else
     regex_check "$CRON_UPDATE" "$CRON_REGEX"
-    echo "CRON_UPDATE is not currently supported. Look for this in future versions."
   fi
 }
 
@@ -132,6 +131,7 @@ EOF
 init_cron() {
   cron_check
   echo "$CRON_BACKUP root BACKUP_LOCATION=/mailcow-backup /mailcow/helper-scripts/backup_and_restore.sh backup all" | crontab -
+  echo "$CRON_UPDATE root cd /mailcow && echo 'y' | ./update.sh" | crontab -
 }
 
 init_api() {
@@ -165,24 +165,17 @@ init_mailcow() {
 
 start_mailcow() {
   cd /mailcow
-  docker-compose up
-}
-
-start_stack() {
-  crond &
-  start_mailcow
+  docker-compose up -d
+  exit 0
 }
 
 priv_check
 init_cron
 
-dockerd &
-
 if [ -f /mailcow/mailcow.conf ]; then
   echo "Mailcow configuration exists probably from another installation. Attempting startup."
-  start_stack  
+  start_mailcow  
 else
   init_mailcow
-  start_stack
+  start_mailcow
 fi
-  

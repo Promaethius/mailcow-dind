@@ -131,7 +131,9 @@ EOF
 init_cron() {
   cron_check
   echo "$CRON_BACKUP root BACKUP_LOCATION=/mailcow-backup /mailcow/helper-scripts/backup_and_restore.sh backup all" | crontab -
-  echo "$CRON_UPDATE root cd /mailcow && echo 'y' | ./update.sh" | crontab -
+  if [ -n "$CRON_UPDATE" ]; then
+    echo "$CRON_UPDATE root cd /mailcow && echo 'y' | ./update.sh" | crontab -
+  fi
 }
 
 init_api() {

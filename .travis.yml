@@ -7,7 +7,10 @@ before_install:
 script:
 - cd $TRAVIS_BUILD_DIR/images
 - docker build -t mailcow-dind mailcow-dind
-- bash $TRAVIS_BUILD_DIR/e2e/main.sh
+- docker run -e HOSTNAME='mailplace.com' -e CRON_BACKUP='* * * * * *' -e TIMEZONE='UTC' -v /home/travis/dind:/var/lib/docker -v /home/travis/mailcow:/mailcow -v /home/travis/mailcow-backup:/mailcow-backup -v /lib/modules:/lib/modules:ro --name mailcow-dind --privileged -d mailcow-dind
+- docker logs mailcow-dind -f &
+- sleep 4m
+- docker stop mailcow-dind
 
 after_script:
 - docker tag mailcow-dind quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH

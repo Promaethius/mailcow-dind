@@ -111,10 +111,15 @@ PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 PDO::ATTR_EMULATE_PREPARES   => false, 
 PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . $offset . "', group_concat_max_len = 3423543543;", 
 ]; 
+while (true) {
 try {
 $pdo = new PDO($dsn, $database_user, $database_pass, $opt);
+break;
 } catch (PDOException $e) {
 echo 'An error occured while connecting to the database: ',  $e->getMessage(), "\n";
+}
+echo 'Reattempting connection in 5s... \n';
+sleep(5);
 }
 init_db_schema();
 EOF

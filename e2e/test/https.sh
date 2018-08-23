@@ -11,6 +11,6 @@ https_test() {
   if [ -n $(cert "443") ]; then return 1; fi
   let "X++"
   msg "Testing HTTPS::Response $X/$Y"
-  if [ $(response "https") != "200" ]; then return 1; fi
+  if [ $(response "https" "example.com") != "200" ]; then return 1; fi
   block "Finished HTTPS Test block."
 }

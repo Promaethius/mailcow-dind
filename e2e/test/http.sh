@@ -8,6 +8,6 @@ http_test() {
   if [ -z $(port "80") ]; then error "HTTP::Port Failed" && return 1; fi
   let "X++"
   msg "Testing HTTP::Response $X/$Y"
-  if [ $(response) != "301" ]; then error "HTTP::Response Failed" && return 1; fi
+  if [ $(response "http" "example.com") != "301" ]; then error "HTTP::Response Failed" && return 1; fi
   block "Finished HTTP Test block."
 }

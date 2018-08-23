@@ -18,10 +18,10 @@ port() {
 response(){
   if [ -n $(echo $1 | grep "https") ]; then
     echo "Testing status code of https://127.0.0.1${2}"
-    return $(curl -s -H "Host: example.com" -k -o /dev/null -w "%{http_code}" "https://127.0.0.1${2}")
+    return $(curl -s -H "Host: $2" -k -o /dev/null -w "%{http_code}" "https://127.0.0.1${2}")
   else
     echo "Testing status code of http://127.0.0.1${2}"
-    return $(curl -s -H "Host: example.com" -o /dev/null -w "%{http_code}" "http://127.0.0.1${2}")
+    return $(curl -s -H "Host: $2" -o /dev/null -w "%{http_code}" "http://127.0.0.1${2}")
   fi
 }
 

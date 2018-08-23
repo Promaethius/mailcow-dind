@@ -4,6 +4,7 @@ Implementation of a DinD container that can host mailcow-dockerized in a situati
 
 ## Roadmap
 * Make IPV6 optional. Requires a host mount of /lib/modules and isn't as self-contained.
+* Separate volumes to spread the I/O throughput. 
 
 ## Caveats
 * No support for IPV6

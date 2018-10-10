@@ -8,7 +8,7 @@ script:
 - cd $TRAVIS_BUILD_DIR/images
 - docker build -t mailcow-dind mailcow-dind
 - cd $TRAVIS_BUILD_DIR/e2e
-- bash -c ./main.sh
+- bash ./main.sh
 
 after_script:
 - docker tag mailcow-dind quay.io/promaethius/mailcow-dind:$TRAVIS_BRANCH

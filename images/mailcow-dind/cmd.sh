@@ -71,63 +71,6 @@ cron_check() {
   fi
 }
 
-exec_wrapper() {
-  echo "Running script in php container: $1"
-  docker-compose exec -T php-fpm-mailcow php -r "$1"
-}
-
-wait_docker() {
-  . /mailcow/mailcow.conf
-  echo "Waiting for ${COMPOSE_PROJECT_NAME}_${1} to be healthy."
-  until [ "`docker inspect -f {{.State.Running}} ${COMPOSE_PROJECT_NAME}_${1}_1`"=="true" ]; do
-    sleep 10s
-  done
-}
-
-init_db() {
-  echo "Beginning DB Init."
-  cd /mailcow
-  docker-compose up -d mysql-mailcow redis-mailcow php-fpm-mailcow
-  wait_docker "mysql-mailcow"
-  wait_docker "redis-mailcow"
-  wait_docker "php-fpm-mailcow"
-  # Adapted from https://github.com/mailcow/mailcow-dockerized/blob/master/data/web/inc/prerequisites.inc.php
-  local CMD=`cat << 'EOF'
-require '/web/inc/vars.inc.php'; 
-require_once '/web/inc/init_db.inc.php';
-$now = new DateTime(); 
-$mins = $now->getOffset() / 60; 
-$sgn = ($mins < 0 ? -1 : 1); 
-$mins = abs($mins); 
-$hrs = floor($mins / 60); 
-$mins -= $hrs * 60; 
-$offset = sprintf('%+d:%02d', $hrs*$sgn, $mins); 
-$dsn = $database_type . ":host=" . $database_host . ";dbname=" . $database_name; 
-echo $dsn;
-$opt = [ 
-PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
-PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, 
-PDO::ATTR_EMULATE_PREPARES   => false, 
-PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . $offset . "', group_concat_max_len = 3423543543;", 
-]; 
-while (true) {
-try {
-$pdo = new PDO($dsn, $database_user, $database_pass, $opt);
-break;
-} catch (PDOException $e) {
-echo 'An error occured while connecting to the database: ',  $e->getMessage(), "\n";
-}
-echo 'Reattempting connection in 5s... \n';
-sleep(5);
-}
-init_db_schema();
-EOF
-`
-  exec_wrapper "$CMD"
-  echo "Stopping DB Init"
-  docker-compose down
-}
-
 init_cron() {
   cron_check
   echo "$CRON_BACKUP root BACKUP_LOCATION=/mailcow-backup /mailcow/helper-scripts/backup_and_restore.sh backup all" | crontab -
@@ -161,7 +104,6 @@ init_mailcow() {
   yq d -i /mailcow/docker-compose.yml services.ipv6nat
   yq d -i /mailcow/docker-compose.yml networks.mailcow-network.enable_ipv6
   docker-compose pull
-  init_db
   init_api
 }
 

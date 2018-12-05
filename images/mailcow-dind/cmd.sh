@@ -100,6 +100,7 @@ init_volumes() {
       echo "Drive $x is moved to /mnt/$x"
     else
       echo "Skipping $x since it's a unix socket mount."
+    fi
   done
 }
 

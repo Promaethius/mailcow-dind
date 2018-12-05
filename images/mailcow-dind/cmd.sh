@@ -94,7 +94,7 @@ init_volumes() {
   mkdir /mnt
   for x in $VOLUMES; do
     yq d -i /mailcow/docker-compose.yml "volumes.$x"
-    sed -i "s/$x/\/mnt\/$x/g' /mailcow/docker-compose.yml
+    sed -i "s/$x/\/mnt\/$x/g" /mailcow/docker-compose.yml
     mkdir /mnt/$x
     echo "Drive $x is moved to /mnt/$x"
   done

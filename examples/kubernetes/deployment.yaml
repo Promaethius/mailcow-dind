@@ -35,7 +35,7 @@ spec:
                 name: mailcow-dind
                 key: cronBackup
         volumeMounts:
-        - mountPath: /var/lib/docker
+        - mountPath: /mnt
           name: dind-persistent
         - mountPath: /mailcow
           name: mailcow-persistent

@@ -93,7 +93,7 @@ init_volumes() {
   local VOLUMES=$(yq r /mailcow/docker-compose.yml 'volumes.' | sed 's/: null*//')
   mkdir /mnt
   for x in $VOLUMES; do
-    if test "${x#*'socket'}" != "$x"; then
+    if [ -z $(echo "$x" | grep "socket") ]; then
       yq d -i /mailcow/docker-compose.yml "volumes.$x"
       sed -i "s/$x/\/mnt\/$x/g" /mailcow/docker-compose.yml
       mkdir /mnt/$x

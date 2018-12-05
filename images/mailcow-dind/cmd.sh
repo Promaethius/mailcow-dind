@@ -89,6 +89,18 @@ init_api() {
   fi
 }
 
+init_volumes() {
+  local VOLUMES=$(yq r /mailcow/docker-compose.yml 'volumes.' | sed 's/: null*//')
+  mkdir /mnt
+  for x in $VOLUMES; do
+    yq d -i /mailcow/docker-compose.yml "volumes.$x"
+    sed -i "s/$x/\/mnt\/$x/g' /mailcow/docker-compose.yml
+    mkdir /mnt/$x
+    echo "Drive $x is moved to /mnt/$x"
+  done
+  yq d -i /mailcow/docker-compose.yml 'volumes'
+}
+
 init_mailcow() {
   init_check
   git clone https://github.com/mailcow/mailcow-dockerized.git /mailcow
@@ -105,6 +117,7 @@ init_mailcow() {
   yq d -i /mailcow/docker-compose.yml networks.mailcow-network.enable_ipv6
   docker-compose pull
   init_api
+  init_volumes
 }
 
 start_mailcow() {

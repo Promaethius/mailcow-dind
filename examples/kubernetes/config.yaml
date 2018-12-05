@@ -5,4 +5,4 @@ metadata:
 data:
   hostname: "example.place.com"
   timezone: "PDT"
-  cronBackup: "0 0 * * 0"
+  cronBackup: "0 0 * * 0 *"

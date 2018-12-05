@@ -93,12 +93,14 @@ init_volumes() {
   local VOLUMES=$(yq r /mailcow/docker-compose.yml 'volumes.' | sed 's/: null*//')
   mkdir /mnt
   for x in $VOLUMES; do
-    yq d -i /mailcow/docker-compose.yml "volumes.$x"
-    sed -i "s/$x/\/mnt\/$x/g" /mailcow/docker-compose.yml
-    mkdir /mnt/$x
-    echo "Drive $x is moved to /mnt/$x"
+    if test "${x#*'socket'}" != "$x"; then
+      yq d -i /mailcow/docker-compose.yml "volumes.$x"
+      sed -i "s/$x/\/mnt\/$x/g" /mailcow/docker-compose.yml
+      mkdir /mnt/$x
+      echo "Drive $x is moved to /mnt/$x"
+    else
+      echo "Skipping $x since it's a unix socket mount."
   done
-  yq d -i /mailcow/docker-compose.yml 'volumes'
 }
 
 init_mailcow() {

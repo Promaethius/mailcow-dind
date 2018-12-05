@@ -7,7 +7,6 @@ Implementation of a DinD container that can host mailcow-dockerized in a situati
 
 ## Caveats
 * No support for IPV6
-* Apart from the backups, the filesystems are not directly accessible. All docker-compose volumes are stored in /var/lib/docker
 
 ## Quick Start
 

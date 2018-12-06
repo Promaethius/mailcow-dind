@@ -91,13 +91,16 @@ init_api() {
 
 init_volumes() {
   local VOLUMES=$(yq r /mailcow/docker-compose.yml 'volumes.' | sed 's/: null*//')
-  mkdir /mnt
   for x in $VOLUMES; do
     if [ -z $(echo "$x" | grep "socket") ]; then
       yq d -i /mailcow/docker-compose.yml "volumes.$x"
       sed -i "s/$x/\/mnt\/$x/g" /mailcow/docker-compose.yml
-      mkdir /mnt/$x
-      echo "Drive $x is moved to /mnt/$x"
+      if [ -d "/mnt/$x" ]; then
+        echo "Drive $x moved to mounted /mnt/$x"
+      else
+        mkdir /mnt/$x
+        echo "Drive $x is moved to /mnt/$x"
+      fi
     else
       echo "Skipping $x since it's a unix socket mount."
     fi
@@ -131,6 +134,10 @@ start_mailcow() {
 
 priv_check
 init_cron
+
+if [ ! -d "/mnt" ]; then
+  mkdir /mnt
+fi
 
 if [ -f /mailcow/mailcow.conf ]; then
   echo "Mailcow configuration exists probably from another installation. Attempting startup."

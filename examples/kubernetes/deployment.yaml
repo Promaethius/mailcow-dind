@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mailcow-dind
-        image: quay.io/Promaethius/mailcow-dind:master
+        image: quay.io/promaethius/mailcow-dind:master
         restart: Always
         env:
           - name: HOSTNAME

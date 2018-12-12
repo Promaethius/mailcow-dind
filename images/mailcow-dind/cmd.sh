@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CRON_REGEX='/^([0-59]|\*) ([0-23]|\*) ([1-31]|\*) ([1-12]|\*) ([1-7]|\*) ([1900-3000]|\*)$/'
+CRON_REGEX='/^([0-59]|\*) ([0-23]|\*) ([1-31]|\*) ([1-12]|\*) ([0-6]|\*) ([1900-3000]|\*)$/'
 # Adapted from https://stackoverflow.com/a/106223
 HOSTNAME_REGEX='/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/'
 # Adapted from https://stackoverflow.com/a/14880044

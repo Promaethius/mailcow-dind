@@ -6,43 +6,43 @@ spec:
   selector:
     app: mailcow-dind
   ports:
-  - name: HTTP
+  - name: http
     protocol: TCP
     port: 80
     targetPort: 80
-  - name: HTTPS
+  - name: https
     protocol: TCP
     port: 443
     targetPort: 443
-  - name: SMTP
+  - name: smtp
     protocol: TCP
     port: 25
     targetPort: 25
-  - name: SMTPS
+  - name: smtps
     protocol: TCP
     port: 465
     targetPort: 465
-  - name: SUBMISSION
+  - name: submission
     protocol: TCP
     port: 587
     targetPort: 587
-  - name: IMAP
+  - name: imap
     protocol: TCP
     port: 143
     targetPort: 143
-  - name: IMAPS
+  - name: imaps
     protocol: TCP
     port: 993
     targetPort: 993
-  - name: POP
+  - name: pop
     protocol: TCP
     port: 110
     targetPort: 110
-  - name: POPS
+  - name: pops
     protocol: TCP
     port: 995
     targetPort: 995
-  - name: SIEVE
+  - name: sieve
     protocol: TCP
     port: 4190
     targetPort: 4190

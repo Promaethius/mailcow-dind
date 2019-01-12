@@ -128,6 +128,7 @@ init_mailcow() {
 
 start_mailcow() {
   cd /mailcow
+  docker-compose pull
   docker-compose up -d
   docker-compose logs -f
 }
